@@ -127,6 +127,7 @@ Perhaps a better example is what a former student did. He didn't just use the en
 
 ![](images/Beatles.png)
 
+Be that student.
 
 
 ### Tidy Modeling
@@ -151,7 +152,7 @@ Start with only the 12 audio features as predictors. You can later feature engin
 # predictors <- ### YOUR CODE HERE ###
 
 spotify_songs2 <- spotify_songs2 %>%
-  select(playlist_genre, predictors)
+  select(playlist_genre, all_of(predictors))
 ```
 
 Split the data into `sptfy_tr` and `sptfy_te`, the training and testing datasets, 80% for training, 20% for testing.
@@ -212,6 +213,8 @@ Finally use the `roc_auc` function from the `yardstick` package to extract the t
 ```{r}
 ### YOUR CODE HERE ###
 ```
+
+You should see AUCs of about 90% and above (does this surprise you?), if not perhaps you should review your process.
 
 ### Wrap up
 
