@@ -51,7 +51,7 @@ library(kernlab)
 
 ### The `spotify_songs` Dataset
 
-The `spotify_songs` dataset was curated by [Kaylin Pavlik](https://www.kaylinpavlik.com/author/walkerkq/) from the [`spotifyr`](https://www.rcharlie.com/spotifyr/) package. It contains about 33K songs from 6 main genres (Electronic Dance Music, Latin, Pop, RnB, Rap, Rock), where each song has:
+The `spotify_songs` dataset was curated by [Kaylin Pavlik](https://www.kaylinpavlik.com/author/walkerkq/) from the [`spotifyr`](https://www.rcharlie.com/spotifyr/) package. It contains about 28K songs from 6 main genres (Electronic Dance Music, Latin, Pop, RnB, Rap, Rock), where each song has:
 
 * `track_name`
 * `track_artist`
@@ -67,6 +67,21 @@ spotify_songs <- read_csv('https://raw.githubusercontent.com/rfordatascience/tid
 
 spotify_songs %>% count(playlist_genre)
 ```
+**Attention**: Apparently each song can repeat a few times with a few genres!
+
+```{r}
+spotify_songs %>% count(track_id, sort = TRUE)
+```
+
+You can either ignore this for now or sample a genre for each song, e.g. with:
+
+```{r}
+spotify_songs <- spotify_songs %>%
+  group_by(track_id) %>%
+  slice_sample(n = 1) %>%
+  ungroup()
+```
+
 
 ### Visualiztion with `ggplot2`
 
@@ -97,7 +112,7 @@ spotify_songs %>%
   ) %>%
   ggplot() +
   geom_mosaic(aes(x = product(modality, genre), fill = modality), na.rm = TRUE) + 
-  labs(x = "", y = "", title="Modality by Genre", caption = "Data: ~33K Spotify songs") +
+  labs(x = "", y = "", title="Modality by Genre", caption = "Data: ~28K Spotify songs") +
   guides(fill = FALSE) +
   scale_fill_manual(values = c("#f4c2c2", "#4dc8e9")) +
   theme_bw() +
@@ -107,6 +122,12 @@ spotify_songs %>%
 ```
 
 Though I'm not sure in this case the mosaic plot justifies itself, there's about the same frequency of songs for each genre.
+
+Perhaps a better example is what a former student did. He didn't just use the entire data, he was interested in the Beatles and he told a very interesting story, showing how the Beatles together produced more hits percentage-wise, than alone:
+
+![](images/Beatles.png)
+
+
 
 ### Tidy Modeling
 
