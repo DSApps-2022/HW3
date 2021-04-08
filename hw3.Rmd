@@ -93,7 +93,7 @@ In this part of the assignment you will produce 5 `ggplot`s describing the data.
 
 * You may not copy one of Kaylin's plots but you may repeat *what it is showing* in a different way
 * You may even repeat your own plot showing the relation between variable X and Y, using a different `geom_`, if you think this is interesting
-* You may use any `ggplot2` extension. There are countless, some may be found [here](http://www.ggplot2-exts.org/gallery/)
+* You may use any `ggplot2` extension. There are countless, some may be found [here](https://exts.ggplot2.tidyverse.org/gallery/)
 * Pay attention to labeling, legends, ticks - make your plots look good (but don't overdo it just because you can)
 
 For example, this a mosaic plot of `mode` (minor/major) vs. genre, using the [`ggmosaic'](https://cran.r-project.org/web/packages/ggmosaic/vignettes/ggmosaic.html) package:
