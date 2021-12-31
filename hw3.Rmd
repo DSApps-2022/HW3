@@ -1,5 +1,5 @@
 ---
-title: "DSApps 2021 @ TAU: Assignment 3"
+title: "DSApps 2022 @ TAU: Assignment 3"
 author: "Giora Simchoni"
 date: "`r Sys.Date()`"
 output: 
@@ -19,18 +19,18 @@ Welcome to Assignment 3 in R!
 Remember:
 
 * You can play with the assignment in Playground mode, but:
-* Only your private Github repository assigned to you by the course admin will be cloned and graded (Submission mode, see instructions [here](https://github.com/DSApps-2021/Class_Slides/blob/master/Apps_of_DS_HW.pdf))
+* Only your private Github repository assigned to you by the course admin will be cloned and graded (Submission mode, see instructions [here](https://github.com/DSApps-2022/Class_Slides/blob/master/Apps_of_DS_HW.pdf))
 * Like any other University assignment, your work should remain private
-* You need to `git clone` your private Github repository locally as explained [here](https://github.com/DSApps-2021/Class_Slides/blob/main/Apps_of_DS_HW.pdf)
+* You need to `git clone` your private Github repository locally as explained [here](https://github.com/DSApps-2022/Class_Slides/blob/main/Apps_of_DS_HW.pdf)
 * You need to uncomment the starter code inside the chunk, replace the `### YOUR CODE HERE ###`, run the chunk and see that you're getting the expected result
 * Pay attention to what you're asked to do and the required output
 * For example, using a *different* function than the one you were specifically asked to use, will decrease your score (unless you amaze me)
 * Your notebook should run smoothly from start to end if someone presses in the RStudio toolbar Run --> Restart R and Run All Chunks
 * When you're done knit the entire notebook into a html file, this is the file that would be graded
 * You can add other files but do not delete any files
-* Commit your work and push to your private Github repository as explained [here](https://github.com/DSApps-2021/Class_Slides/blob/main/Apps_of_DS_HW.pdf)
+* Commit your work and push to your private Github repository as explained [here](https://github.com/DSApps-2022/Class_Slides/blob/main/Apps_of_DS_HW.pdf)
 
-This assignment is due: 15/4 23:59
+This assignment is due: TBD
 
 ### Packages
 
@@ -113,7 +113,7 @@ spotify_songs %>%
   ggplot() +
   geom_mosaic(aes(x = product(modality, genre), fill = modality), na.rm = TRUE) + 
   labs(x = "", y = "", title="Modality by Genre", caption = "Data: ~28K Spotify songs") +
-  guides(fill = FALSE) +
+  guides(fill = "none") +
   scale_fill_manual(values = c("#f4c2c2", "#4dc8e9")) +
   theme_bw() +
   theme(text = element_text(family = "mono"),
@@ -132,7 +132,7 @@ Be that student.
 
 ### Tidy Modeling
 
-##### (50 points)
+##### (40 points)
 
 Let's filter the songs to EDM and RnB songs only and let's recode the value "r&b" to "RnB" and "edm" to "EDM":
 
@@ -215,6 +215,125 @@ Finally use the `roc_auc` function from the `yardstick` package to extract the t
 ```
 
 You should see AUCs of about 90% and above (does this surprise you?), if not perhaps you should review your process.
+
+### Paper questions
+
+##### (10 points)
+
+Read Sections 1-2 of Moscovich and Rosset [On the CV Bias](https://arxiv.org/abs/1901.08974) 2021 paper (first 5 pages, of course you're invited to read the whole thing!).
+
+Suppose we have variables (`x`, `y`) from which we have 100 pair observations:
+
+```{r}
+x <- rgamma(100, 1)
+y <- x + rnorm(100)
+```
+
+We want to predict new `y`s as more `x`s are coming in, using a simple linear model with no intercept, after scaling `x` and splitting the 100 pairs to 80% training and 20% testing sets. We estimate the quality of our estimator using MSE on the testing data.
+
+Here are four options to do this:
+
+```{r}
+f1 <- function(x, y) {
+  # scale x
+  x_mean <- mean(x)
+  x_sd <- sd(x)
+  x_scaled <- (x - x_mean) / x_sd
+  
+  # data splitting
+  x_train <- x[1:80]
+  x_test <- x[81:100]
+  y_train <- x[1:80]
+  y_test <- x[81:100]
+  
+  # model
+  lm_obj <- lm(y_train ~ 0 + x_train)
+  
+  # predict
+  y_pred <- predict(lm_obj, data.frame(x_train = x_test))
+  mse_test <- mean((y_pred - y_test)^2)
+  return(mse_test)
+}
+
+f2 <- function(x, y) {
+  # scale x
+  x_mean <- mean(x)
+  x_sd <- sd(x)
+  x_scaled <- (x - x_mean) / x_sd
+  
+  # data splitting
+  n <- length(x)
+  sample_train <- sample(1:n, floor(n * 0.8))
+  x_train <- x[sample_train]
+  x_test <- x[-sample_train]
+  y_train <- x[sample_train]
+  y_test <- x[-sample_train]
+  
+  # model
+  lm_obj <- lm(y_train ~ 0 + x_train)
+  
+  # predict
+  y_pred <- predict(lm_obj, data.frame(x_train = x_test))
+  mse_test <- mean((y_pred - y_test)^2)
+  return(mse_test)
+}
+
+f3 <- function(x, y) {
+  # data splitting
+  n <- length(x)
+  sample_train <- sample(1:n, floor(n * 0.8))
+  x_train <- x[sample_train]
+  x_test <- x[-sample_train]
+  y_train <- x[sample_train]
+  y_test <- x[-sample_train]
+  
+  # scale x
+  x_mean <- mean(x_train)
+  x_sd <- sd(x_train)
+  x_train <- (x_train - x_mean) / x_sd
+  x_test <- (x_test - x_mean) / x_sd
+  
+  # model
+  lm_obj <- lm(y_train ~ 0 + x_train)
+  
+  # predict
+  y_pred <- predict(lm_obj, data.frame(x_train = x_test))
+  mse_test <- mean((y_pred - y_test)^2)
+  return(mse_test)
+}
+
+f4 <- function(x, y) {
+  # data splitting
+  n <- length(x)
+  sample_train <- sample(1:n, floor(n * 0.8))
+  x_train <- x[sample_train]
+  x_test <- x[-sample_train]
+  y_train <- x[sample_train]
+  y_test <- x[-sample_train]
+  
+  # scale x
+  x_mean <- mean(x_train)
+  x_sd <- sd(x_train)
+  x_train <- (x_train - x_mean) / x_sd
+  x_mean <- mean(x_test)
+  x_sd <- sd(x_test)
+  x_test <- (x_test - x_mean) / x_sd
+  
+  # model
+  lm_obj <- lm(y_train ~ 0 + x_train)
+  
+  # predict
+  y_pred <- predict(lm_obj, data.frame(x_train = x_test))
+  mse_test <- mean((y_pred - y_test)^2)
+  return(mse_test)
+}
+
+```
+
+* Which is the best option giving the most realistic test MSE according to Moscovich and Rosset? Explain in short.
+* Which is the option they are most concerned with? Explain in short.
+* Explain in short what's wrong with the other two options.
+* Bonus 2 points: Under which assumptions/circumstances are the three options other than the best not *that* bad? (hint: you might like to read further)
 
 ### Wrap up
 
