@@ -30,7 +30,7 @@ Remember:
 * You can add other files but do not delete any files
 * Commit your work and push to your private Github repository as explained [here](https://github.com/DSApps-2022/Class_Slides/blob/main/Apps_of_DS_HW.pdf)
 
-This assignment is due: TBD
+This assignment is due: 24/3 23:59
 
 ### Packages
 
