@@ -243,8 +243,8 @@ f1 <- function(x, y) {
   # data splitting
   x_train <- x[1:80]
   x_test <- x[81:100]
-  y_train <- x[1:80]
-  y_test <- x[81:100]
+  y_train <- y[1:80]
+  y_test <- y[81:100]
   
   # model
   lm_obj <- lm(y_train ~ 0 + x_train)
@@ -266,8 +266,8 @@ f2 <- function(x, y) {
   sample_train <- sample(1:n, floor(n * 0.8))
   x_train <- x[sample_train]
   x_test <- x[-sample_train]
-  y_train <- x[sample_train]
-  y_test <- x[-sample_train]
+  y_train <- y[sample_train]
+  y_test <- y[-sample_train]
   
   # model
   lm_obj <- lm(y_train ~ 0 + x_train)
@@ -284,8 +284,8 @@ f3 <- function(x, y) {
   sample_train <- sample(1:n, floor(n * 0.8))
   x_train <- x[sample_train]
   x_test <- x[-sample_train]
-  y_train <- x[sample_train]
-  y_test <- x[-sample_train]
+  y_train <- y[sample_train]
+  y_test <- y[-sample_train]
   
   # scale x
   x_mean <- mean(x_train)
@@ -308,8 +308,8 @@ f4 <- function(x, y) {
   sample_train <- sample(1:n, floor(n * 0.8))
   x_train <- x[sample_train]
   x_test <- x[-sample_train]
-  y_train <- x[sample_train]
-  y_test <- x[-sample_train]
+  y_train <- y[sample_train]
+  y_test <- y[-sample_train]
   
   # scale x
   x_mean <- mean(x_train)
