@@ -238,7 +238,7 @@ f1 <- function(x, y) {
   # scale x
   x_mean <- mean(x)
   x_sd <- sd(x)
-  x_scaled <- (x - x_mean) / x_sd
+  x <- (x - x_mean) / x_sd
   
   # data splitting
   x_train <- x[1:80]
@@ -259,7 +259,7 @@ f2 <- function(x, y) {
   # scale x
   x_mean <- mean(x)
   x_sd <- sd(x)
-  x_scaled <- (x - x_mean) / x_sd
+  x <- (x - x_mean) / x_sd
   
   # data splitting
   n <- length(x)
